@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
-import { useRef } from 'react';
 import emailjs from 'emailjs-com';
 import { Snackbar } from '@mui/material';
 
@@ -8,8 +7,6 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    position: relative;
-    z-index: 1;
     align-items: center;
     @media (max-width: 960px) {
         padding: 0px;
@@ -17,21 +14,16 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-    position: relative;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     flex-direction: column;
+    align-items: center;
     width: 100%;
     max-width: 1350px;
-    padding: 0px 0px 80px 0px;
+    padding: 80px 0;
     gap: 12px;
-    @media (max-width: 960px) {
-        flex-direction: column;
-    }
 `;
 
-const Title = styled.div`
+const Title = styled.h2`
     font-size: 42px;
     text-align: center;
     font-weight: 600;
@@ -43,7 +35,7 @@ const Title = styled.div`
     }
 `;
 
-const Desc = styled.div`
+const Desc = styled.p`
     font-size: 18px;
     text-align: center;
     max-width: 600px;
@@ -67,7 +59,7 @@ const ContactForm = styled.form`
     gap: 12px;
 `;
 
-const ContactTitle = styled.div`
+const ContactTitle = styled.h3`
     font-size: 24px;
     margin-bottom: 6px;
     font-weight: 600;
@@ -84,7 +76,7 @@ const ContactInput = styled.input`
     border-radius: 12px;
     padding: 12px 16px;
     &:focus {
-        border: 1px solid ${({ theme }) => theme.primary};
+        border-color: ${({ theme }) => theme.primary};
     }
 `;
 
@@ -98,31 +90,26 @@ const ContactInputMessage = styled.textarea`
     border-radius: 12px;
     padding: 12px 16px;
     &:focus {
-        border: 1px solid ${({ theme }) => theme.primary};
+        border-color: ${({ theme }) => theme.primary};
     }
 `;
 
-const ContactButton = styled.input`
+const ContactButton = styled.button`
     width: 100%;
-    text-decoration: none;
-    text-align: center;
-    background: hsla(271, 100%, 50%, 1);
     background: linear-gradient(225deg, hsla(271, 100%, 50%, 1) 0%, hsla(294, 100%, 50%, 1) 100%);
-    background: -moz-linear-gradient(225deg, hsla(271, 100%, 50%, 1) 0%, hsla(294, 100%, 50%, 1) 100%);
-    background: -webkit-linear-gradient(225deg, hsla(271, 100%, 50%, 1) 0%, hsla(294, 100%, 50%, 1) 100%);
     padding: 13px 16px;
     margin-top: 2px;
     border-radius: 12px;
-    cursor: ${({ sending }) => sending ? 'not-allowed' : 'pointer'};
+    cursor: ${({ sending }) => (sending ? 'not-allowed' : 'pointer')};
     border: none;
     color: ${({ theme }) => theme.text_primary};
     font-size: 18px;
     font-weight: 600;
     :hover {
-        transform: ${({ sending }) => sending ? 'none' : 'translateY(-10px)'};
+        transform: ${({ sending }) => (sending ? 'none' : 'translateY(-2px)')};
     }
     :active {
-        transform: ${({ sending }) => sending ? 'none' : 'translateY(0px)'};
+        transform: ${({ sending }) => (sending ? 'none' : 'translateY(0)')};
     }
 `;
 
@@ -134,14 +121,7 @@ const Contact = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const fromEmail = form.current.from_email.value;
-        const fromName = form.current.from_name.value;
-        const subject = form.current.subject.value;
-        const message = form.current.message.value;
-
-        if (!fromEmail || !fromName || !subject || !message || sending) {
-            return;
-        }
+        if (sending) return;
 
         setSending(true);
 
@@ -163,21 +143,20 @@ const Contact = () => {
         <Container>
             <Wrapper>
                 <Title>Contact</Title>
-                <Desc>Sinta se Livre para Entrar em contato!</Desc>
+                <Desc>Sinta-se livre para entrar em contato!</Desc>
                 <ContactForm ref={form} onSubmit={handleSubmit}>
                     <ContactTitle>Email Me 🚀</ContactTitle>
-                    <ContactInput placeholder="Your Email" name="from_email" required />
+                    <ContactInput placeholder="Your Email" name="from_email" type="email" required />
                     <ContactInput placeholder="Your Name" name="from_name" required />
                     <ContactInput placeholder="Subject" name="subject" required />
                     <ContactInputMessage placeholder="Message" rows="4" name="message" required />
-                    <ContactButton type="submit" value="Send" sending={sending} />
+                    <ContactButton type="submit" sending={sending}>Send</ContactButton>
                 </ContactForm>
                 <Snackbar
                     open={open}
                     autoHideDuration={6000}
                     onClose={() => setOpen(false)}
                     message="Email sent successfully!"
-                    severity="success"
                 />
             </Wrapper>
         </Container>
