@@ -1,43 +1,42 @@
 import React from 'react'
 import styled from 'styled-components'
 
-//imagem da experiência caso tenha
 const Document = styled.img`
     display: none;
     height: 70px;
     width: fit-content;
     background-color: #000;
     border-radius: 10px;
-    &:hover{
+    &:hover {
         cursor: pointer;
         opacity: 0.8;
     }
 `
-//descrição da experiência
+
 const Description = styled.div`
     width: 100%;
     font-size: 15px;
     font-weight: 400;
     color: ${({ theme }) => theme.text_primary + 99};
     margin-bottom: 10px;
-    @media only screen and (max-width: 768px){
+    @media only screen and (max-width: 768px) {
         font-size: 12px;
     }
 `
-//span para limitar a descrição
+
 const Span = styled.span`
-overflow: hidden;
-display: -webkit-box;
-max-width: 100%;
--webkit-line-clamp: 4;
--webkit-box-orient: vertical;
-text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    max-width: 100%;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
 `
-//card da experiência
+
 const Card = styled.div`
     width: 650px;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    box-shadow: rgba(23, 92, 230, 0.15) 0px 4px 24px;
     padding: 12px 16px;
     justify-content: space-between;
     position: relative;
@@ -46,110 +45,102 @@ const Card = styled.div`
     flex-direction: column;
     gap: 12px;
     transition: all 0.3s ease-in-out;
-    &:hover{
-        box-shadow: 0px 0px 20px rgba(0,0,0,0.2);
+    &:hover {
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
         transform: translateY(-5px);
     }
-    @media only screen and (max-width: 768px){
+    @media only screen and (max-width: 768px) {
         padding: 10px;
         gap: 8px;
         width: 300px;
     }
-    {/* quando passar o mouse no card, a imagem aparece */}
-    &:hover ${Document}{
+
+    &:hover ${Document} {
         display: flex;
     }
-    {/* quando passar o mouse no card, a descrição aparece */}
-    &:hover ${Span}{
+
+    &:hover ${Span} {
         overflow: visible;
         -webkit-line-clamp: unset;
-
     }
-
-    border: 0.1px solid #306EE8;
-    box-shadow: rgba(23, 92, 230, 0.15) 0px 4px 24px;
+    border: 0.1px solid #306ee8;
 `
-//topo do card
+
 const Top = styled.div`
     width: 100%;
     display: flex;
-    gap: 12px
+    gap: 12px;
 `
-//imagem da experiência
+
 const Image = styled.img`
     height: 50px;
     background-color: #000;
     border-radius: 10px;
     margin-top: 4px;
-    @media only screen and (max-width: 768px){
+    @media only screen and (max-width: 768px) {
         height: 40px;
     }
 `
-//corpo do card parte superior acima da descrição
+
 const Body = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
 `
 
-//nome da experiência
 const Role = styled.div`
     font-size: 18px;
     font-weight: 600;
     color: ${({ theme }) => theme.text_primary + 99};
-    @media only screen and (max-width: 768px){
+    @media only screen and (max-width: 768px) {
         font-size: 14px;
     }
 `
-//empresa da experiência
+
 const Company = styled.div`
     font-size: 14px;
     font-weight: 500;
     color: ${({ theme }) => theme.text_secondary + 99};
-    @media only screen and (max-width: 768px){
+    @media only screen and (max-width: 768px) {
         font-size: 12px;
     }
 `
-//data da experiência
+
 const Date = styled.div`
     font-size: 12px;
     font-weight: 400;
     color: ${({ theme }) => theme.text_secondary + 80};
-    @media only screen and (max-width: 768px){
+    @media only screen and (max-width: 768px) {
         font-size: 10px;
     }
 `
 
-//habilidades da experiência
 const Skills = styled.div`
     width: 100%;
     display: flex;
     gap: 12px;
     margin-top: -10px;
 `
-//Wrapper para as habilidades
+
 const ItemWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
 `
-//Item das habilidades
+
 const Skill = styled.div`
     font-size: 15px;
     font-weight: 400;
     color: ${({ theme }) => theme.text_primary + 99};
-    @media only screen and (max-width: 768px){
+    @media only screen and (max-width: 768px) {
         font-size: 12px;
     }
 `
-
-
 
 const ExperienceCard = ({ experience }) => {
     return (
         <Card>
             <Top>
-                <Image src={experience.img} />
                 <Body>
                     <Role>{experience.role}</Role>
                     <Company>{experience.company}</Company>
@@ -157,30 +148,26 @@ const ExperienceCard = ({ experience }) => {
                 </Body>
             </Top>
             <Description>
-                {experience?.desc &&
-                    <Span>{experience?.desc}</Span>
-
-                }
-                {experience?.skills &&
+                {experience.desc && <Span>{experience.desc}</Span>}
+                {experience.skills && (
                     <>
                         <br />
                         <Skills>
                             <b>Skills:</b>
                             <ItemWrapper>
-                                {experience?.skills?.map((skill, index) => (
-                                    <Skill>• {skill}</Skill>
+                                {experience.skills.map((skill, index) => (
+                                    <Skill key={index}>• {skill}</Skill>
                                 ))}
                             </ItemWrapper>
                         </Skills>
                     </>
-                }
+                )}
             </Description>
-            {/* se tiver documento, aparece o botão para abrir */}
-            {experience.doc &&
+            {experience.doc && (
                 <a href={experience.doc} target="new">
                     <Document src={experience.doc} />
                 </a>
-            }
+            )}
         </Card>
     )
 }
