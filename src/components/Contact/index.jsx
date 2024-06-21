@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import emailjs from 'emailjs-com';
-import { Snackbar } from '@mui/material';
+import { Snackbar, Alert } from '@mui/material';
 
 const Container = styled.div`
     display: flex;
@@ -96,7 +96,7 @@ const ContactInputMessage = styled.textarea`
 
 const ContactButton = styled.button`
     width: 100%;
-    background: linear-gradient(225deg, hsla(271, 100%, 50%, 1) 0%, hsla(294, 100%, 50%, 1) 100%);
+    background: linear-gradient(225deg, hsla(120, 100%, 50%, 1) 0%, hsla(150, 100%, 50%, 1) 100%);
     padding: 13px 16px;
     margin-top: 2px;
     border-radius: 12px;
@@ -117,6 +117,7 @@ const Contact = () => {
     const [open, setOpen] = useState(false);
     const [sending, setSending] = useState(false);
     const form = useRef();
+    const [error, setError] = useState(null);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -124,6 +125,7 @@ const Contact = () => {
         if (sending) return;
 
         setSending(true);
+        setError(null);
 
         emailjs.sendForm('service_ryphb0u', 'template_b7o78b9', form.current, 'sQJ2RXzxgtbEI4jED')
             .then(() => {
@@ -132,7 +134,7 @@ const Contact = () => {
             })
             .catch((error) => {
                 console.error('Erro ao enviar o formulário:', error);
-                alert('Ocorreu um erro ao enviar o formulário. Por favor, tente novamente mais tarde.');
+                setError('Ocorreu um erro ao enviar o formulário. Por favor, tente novamente mais tarde.');
             })
             .finally(() => {
                 setSending(false);
@@ -146,17 +148,19 @@ const Contact = () => {
                 <Desc>Sinta-se livre para entrar em contato!</Desc>
                 <ContactForm ref={form} onSubmit={handleSubmit}>
                     <ContactTitle>Email Me 🚀</ContactTitle>
-                    <ContactInput placeholder="Your Email" name="from_email" type="email" required />
-                    <ContactInput placeholder="Your Name" name="from_name" required />
-                    <ContactInput placeholder="Subject" name="subject" required />
-                    <ContactInputMessage placeholder="Message" rows="4" name="message" required />
+                    <ContactInput placeholder="Your Email" name="from_email" type="email" aria-label="Your Email" required />
+                    <ContactInput placeholder="Your Name" name="from_name" aria-label="Your Name" required />
+                    <ContactInput placeholder="Subject" name="subject" aria-label="Subject" required />
+                    <ContactInputMessage placeholder="Message" rows="4" name="message" aria-label="Message" required />
                     <ContactButton type="submit" sending={sending}>Send</ContactButton>
                 </ContactForm>
+                {error && <Alert severity="error">{error}</Alert>}
                 <Snackbar
                     open={open}
                     autoHideDuration={6000}
                     onClose={() => setOpen(false)}
                     message="Email sent successfully!"
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                 />
             </Wrapper>
         </Container>
